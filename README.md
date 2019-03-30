@@ -4,7 +4,7 @@ A visual representation of a q-learning algorithm solving a labyrinth. The proje
 
 Q-learning is a model-free reinforcement learning algorithm. Q-learning is also an unsupervised training algorithm and therefore it does not use examples or previously known references.
 
-As of reinforcement learning, q-learning involves an agent, a set of states and set of actions. In my application: 
+As of reinforcement learning, q-learning involves an agent, a set of states and a set of actions. In my application: 
 
 * The agent is an entity (a yellow square) that wants to reach a target/goal position (a pink zone).
 * A state would be the current position of the agent.
