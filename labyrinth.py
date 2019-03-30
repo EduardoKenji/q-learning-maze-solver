@@ -42,12 +42,13 @@ class Labyrinth:
     def __init__(self, map_file, agent):
         # The labyrinth contain a reference to the agent
         self.agent = agent
-        
         self.create_labyrinth(map_file)
 
     def process_file(self, map_file):
         # Processes map file content and define the map width (number of columns)
         map_file_content = map_file.read().split("\n")
+        # Closed opened map file
+        map_file.close()
         return map_file_content, [int(i) for i in map_file_content[0].split(" ")][0], [int(i) for i in map_file_content[0].split(" ")][1]
 
     # Create labyrinth
