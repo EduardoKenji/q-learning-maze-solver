@@ -29,8 +29,8 @@ Q-learning training: As the training goes on, the agent is learning, this learni
 
 Untrained agent: As the Q matrix is filled with 0's and the exploration chance is high, most of the agent's decisions will be mostly random as it has no knowledge. (GIF in slower motion below)
 
-![](pictures/q_learning_untrained.gif)
+![](pictures/q_learning_untrained.gif =250x250)
 
 Trained agent: As the Q matrix is complete and the exploration chance is very low or simply 0%, the agent will pratically always know how to reach the goal/target map position. (GIF in slower motion below)
 
-![](pictures/q_learning_trained.gif)
+![](pictures/q_learning_trained.gif =250x250)
