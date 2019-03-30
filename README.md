@@ -23,7 +23,7 @@ My application builds a map from a map file, currently in "maps" folder and usin
 
 ![](pictures/q-learning_map.PNG)
 
-Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled.
+Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled. (GIF below)
 
 ![](pictures/q_learning_training.gif)
 
