@@ -23,10 +23,6 @@ My application builds a map from a map file, currently in "maps" folder and usin
 
 ![](pictures/q-learning_map.PNG)
 
-Before training, all values in the Q value matrix are 0's and the exploration chance is high:
+Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled.
 
-![](pictures/q-learning_untrained.PNG)
-
-After training, the agent has a memory/knowledge (filled Q matrix) of the path to the target/goal position and the exploration chance is very low or simply 0%:
-
-![](pictures/q-learning_trained.PNG)
+![](pictures/q_learning_training.gif)
