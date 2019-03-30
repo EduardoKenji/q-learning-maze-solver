@@ -26,3 +26,11 @@ My application builds a map from a map file, currently in "maps" folder and usin
 Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled.
 
 ![](pictures/q_learning_training.gif)
+
+Untrained agent: As the Q matrix is filled with 0's and the exploration chance is high, most of the agent's decisions will be mostly random as it has no knowledge. (GIF in slower motion below)
+
+![](pictures/q_learning_untrained.gif)
+
+Trained agent: As the Q matrix is complete and the exploration chance is very low or simply 0%, the agent will pratically always know how to reach the goal/target map position. (GIF in slower motion below)
+
+![](pictures/q_learning_trained.gif)
