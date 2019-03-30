@@ -12,6 +12,8 @@ As of reinforcement learning, q-learning involves an agent, a set of states and 
 
 Q-learning also involves a reward matrix (the R matrix) and a memory/knowledge matrix with all (state, action) pairs and values possible. Q-learning also features a random exploration chance, a chance to decide the next move randomly, to allow the agent to potentially discover new and more rewarding decisions. The random exploration chance will be decremented during the agent's training. Currently, the learning rate is fixed at 0.8.
 
+After each step, we adjust: Q(state, action) = R(state, action) + Gamma * Max[Q(next state, all actions)]
+
 My application builds a map from a map file, currently in "maps" folder and using "maps/example_map.txt". The first represents the map height and the map width, respectively.
 
 * '*': Indicates a wall or blocking object
