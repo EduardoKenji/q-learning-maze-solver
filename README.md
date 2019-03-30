@@ -1,6 +1,6 @@
-# q-learning-labyrinth-solver
+# q-learning-maze-solver
 
-A visual representation of a q-learning algorithm solving a labyrinth. The project is being developed with Python and pygame modules. 
+A visual representation of a q-learning algorithm solving a maze. The project is being developed with Python and pygame modules. 
 
 Q-learning is a model-free reinforcement learning algorithm. Q-learning is also an unsupervised training algorithm and therefore it does not use examples or previously known references.
 
