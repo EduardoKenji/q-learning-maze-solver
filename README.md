@@ -12,7 +12,7 @@ As of reinforcement learning, q-learning involves an agent, a set of states and 
 
 Q-learning also involves a reward matrix (the R matrix) and a memory/knowledge matrix with all (state, action) pairs and values possible. Q-learning also features a random exploration chance, a chance to decide the next move randomly, to allow the agent to potentially discover new and more rewarding decisions. The random exploration chance will be decremented during the agent's training.
 
-My application builds a map from a map file, currently in "example_map.txt".
+My application builds a map from a map file, currently in "example_map.txt". The first represents the map height and the map width, respectively.
 
 * '*': Indicates a wall or blocking object
 * '0': An empty square
