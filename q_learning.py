@@ -26,7 +26,7 @@ class QLearning:
                 for k in range(len(self.labyrinth.map_squares)):
                     for l in range(len(self.labyrinth.map_squares[i])):
                         r_matrix[(self.labyrinth.map_squares[i][j].id, self.labyrinth.map_squares[k][l].id)] = -1
-                # Check if it is possible to reach adjacents map squares (no walls in between) from self.labyrinth.map_squares[i][j]
+                # Check if it is possible to reach adjacent map squares (no walls in between) from self.labyrinth.map_squares[i][j]
                 r_matrix = self.check_and_create_connections((i, j), r_matrix, 0)
                 if(self.labyrinth.map_squares[i][j].is_blocked_dict["my_type"] == '2'):
                     r_matrix = self.check_and_create_connections((i, j), r_matrix, 100)
@@ -89,10 +89,9 @@ class QLearning:
         return False
 
     def decide_next_move(self):
-        q_value_direction_dict = {}
         # key: directions ("left", "bottom", "right", "top")
         # value: tuples with (next_move_position.id and q_matrix[(current_position.id ,next_move_position.id)])
-        q_value_direction_dict = self.create_q_value_direction_dict(q_value_direction_dict, self.labyrinth.agent.map_x, self.labyrinth.agent.map_y)
+        q_value_direction_dict = self.create_q_value_direction_dict(self.labyrinth.agent.map_x, self.labyrinth.agent.map_y)
         max_q_value, max_direction, available_directions = self.calculate_next_move_data(q_value_direction_dict)
         if(max_q_value == 0):
             self.decide_when_no_max_value(available_directions, q_value_direction_dict)
@@ -105,6 +104,8 @@ class QLearning:
                 self.decide_when_no_max_value(available_directions, q_value_direction_dict)
         self.num_steps += 1
 
+    # Function that determines the max Q value for all current possible (state, action), the direction in which the Q value is maxed and the
+    # available directions in case the action is decided at random (all Q values are 0 or the agent decides to explore)
     def calculate_next_move_data(self, q_value_direction_dict):
         max_q_value = 0
         max_direction = ""
@@ -118,9 +119,18 @@ class QLearning:
                 max_direction = key
         return max_q_value, max_direction, available_directions
 
+    # Update the Q(state, action)
     def adjust_q_table(self, direction_to_go, q_value_direction_dict):
         # R(state, action)
         reward = self.r_matrix[(q_value_direction_dict["my_type"][0], q_value_direction_dict[direction_to_go][0])]
+        dif_x, dif_y = self.calculate_current_position_offset(direction_to_go)
+        q_value_next_move_data_dict = self.create_q_value_direction_dict(self.labyrinth.agent.map_x+dif_x, self.labyrinth.agent.map_y+dif_y)
+        max_q_value_next_move = self.calculate_next_move_data(q_value_next_move_data_dict)[0]
+        # Q(state, action) = R(state, action) + Gamma * Max[Q(next state, all actions)]
+        self.q_matrix[(q_value_direction_dict["my_type"][0],q_value_direction_dict[direction_to_go][0])] = int(reward + (self.learning_rate * max_q_value_next_move))
+
+    # Function that calculates the position offset to the adjacent square
+    def calculate_current_position_offset(self, direction_to_go):
         dif_x = 0
         dif_y = 0
         if(direction_to_go == "left"):
@@ -131,10 +141,7 @@ class QLearning:
             dif_y += 1
         if(direction_to_go == "top"):
             dif_y -= 1
-        q_value_next_move_data_dict = self.create_q_value_direction_dict(q_value_direction_dict, self.labyrinth.agent.map_x+dif_x, self.labyrinth.agent.map_y+dif_y)
-        max_q_value_next_move = self.calculate_next_move_data(q_value_next_move_data_dict)[0]
-        # Q(state, action) = R(state, action) + Gamma * Max[Q(next state, all actions)]
-        self.q_matrix[(q_value_direction_dict["my_type"][0],q_value_direction_dict[direction_to_go][0])] = int(reward + (self.learning_rate * max_q_value_next_move))
+        return dif_x, dif_y
 
     # The next move will be the greatest (state, action) in Q table
     def decide_when_max_value(self, available_directions, direction_to_go, q_value_direction_dict):
@@ -151,16 +158,10 @@ class QLearning:
 
     # All (state, action) in Q table have value 0
     def decide_when_no_max_value(self, available_directions, q_value_direction_dict):
-        #print(available_directions) 
+
         random_index = random.randint(0, len(available_directions)-1)
         random_direction = available_directions[random_index]
         self.adjust_q_table(random_direction, q_value_direction_dict)
-        #print(q_value_direction_dict)
-        #print(q_value_direction_dict['my_type'])
-        #print(q_value_direction_dict['my_type'][0])
-        #print(q_value_direction_dict[random_direction])
-        #print(q_value_direction_dict[random_direction][0])
-        #print(self.r_matrix[(q_value_direction_dict["my_type"][0], q_value_direction_dict["my_type"][0])])
 
         if(random_direction == "left"):
             self.labyrinth.agent.map_x -= 1
@@ -171,7 +172,10 @@ class QLearning:
         if(random_direction == "top"):
             self.labyrinth.agent.map_y -= 1
 
-    def create_q_value_direction_dict(self, q_value_direction_dict, x, y):
+    # Create a dictionary with:
+    # key: directions ("left", "bottom", "right", "top")
+    # value: tuples with (next_move_position.id and q_matrix[(current_position.id ,next_move_position.id)])
+    def create_q_value_direction_dict(self, x, y):
         q_value_direction_dict = {}
         current_position_x = x
         current_position_y = y
@@ -185,6 +189,7 @@ class QLearning:
         
         return q_value_direction_dict
 
+    # Function that determines and returns the correct adjacent map square to the current agent's map position depending on the direction parameter
     def get_map_square_with_direction(self, x, y, direction):
         if(direction == "left"):
             return self.labyrinth.map_squares[y][x-1]

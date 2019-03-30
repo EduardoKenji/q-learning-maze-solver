@@ -7,6 +7,7 @@ from agent import Agent
 # Main function, the first function called in the program
 def main():
 
+    # Create q-learning and other necessary objects for the window
     agent = create_agent()
     labyrinth = create_labyrinth(agent)
     q_learning_solver = create_q_learning_solver(labyrinth)
