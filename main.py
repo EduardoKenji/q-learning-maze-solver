@@ -4,6 +4,7 @@ from q_learning import QLearning
 from labyrinth import Labyrinth
 from agent import Agent
 
+# Main function, the first function called in the program
 def main():
 
     # Agent configuration and creation
@@ -15,7 +16,7 @@ def main():
     agent = Agent(agent_config_dict)
 
     # Labyrinth map creation
-    file_address = "example_map.txt"
+    file_address = "maps/example_map.txt"
     map_file = open(file_address, "r")
     labyrinth = Labyrinth(map_file, agent)
 
@@ -78,15 +79,72 @@ def main():
         # Update and possibly repaint window
         pygame.display.update()
 
-def draw_matrix(font, screen, object_references):
+# Draw Q matrix on screen
+def draw_matrix_text(font, screen, object_references):
+    # object_references[0]: agent
+    # object_references[1]: labyrinth
+    # object_references[2]: q_learning_solver
+    list_of_lines, state_text, action_text = create_matrix_texts(font, screen, object_references)
+    below_map_y = object_references[1].map_squares[len(object_references[1].map_squares)-1][0].y+(2.5 * constant.FONT_SIZE)
+
+    screen.blit(state_text, (50, below_map_y+(7*constant.FONT_SIZE)+((len(list_of_lines)/2)*0.8*constant.FONT_SIZE)))
+    screen.blit(action_text, (200, below_map_y+(5.8*constant.FONT_SIZE)))
+    for i in range(len(list_of_lines)):
+        screen.blit(list_of_lines[i], (120, below_map_y+(7*constant.FONT_SIZE)+(i*0.9*constant.FONT_SIZE)))
+
+# Draw the labyrinth map square ids at the top-left corner of a map square
+def draw_labyrinth_map_square_id_text(font, screen, object_references):
+    for i in range(len(object_references[1].map_squares)):
+        for j in range(len(object_references[1].map_squares[i])):
+            test_text = font.render(str(object_references[1].map_squares[i][j].id), constant.SMOOTH_EDGES,
+                constant.COLOR_DICT['black'])
+            screen.blit(test_text, (object_references[1].map_squares[i][j].x, object_references[1].map_squares[i][j].y))
+
+# Draw texts for agent's current position, current epoch, total amount of steps and current exploration_chance from q-learning_solver
+def draw_text_on_screen(font, screen, object_references):
+    # object_references[0]: agent
+    # object_references[1]: labyrinth
+    # object_references[2]: q_learning_solver
+    
+    # Get list of texts to draw on screen
+    list_of_texts = create_texts(font, screen, object_references)
 
     below_map_y = object_references[1].map_squares[len(object_references[1].map_squares)-1][0].y+(2.5 * constant.FONT_SIZE)
 
+    # Drawing texts on screens
+    for i in range(len(list_of_texts)):
+        screen.blit(list_of_texts[i], (70, below_map_y+(1.5 * i * constant.FONT_SIZE)))
+
+    # Draw Q matrix
+    draw_matrix_text(font, screen, object_references)
+    # Draw the labyrinth map square ids
+    draw_labyrinth_map_square_id_text(font, screen, object_references)
+
+# Create texts for agent's current position, current epoch, total amount of steps and current exploration_chance from q-learning_solver
+def create_texts(font, screen, object_references):
+
+    list_of_texts = []
+    agent_position_text = font.render("Agent position: ("+str(object_references[1].agent.map_x)+
+        ", "+str(object_references[1].agent.map_y)+")", constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
+    epoch_text = font.render("Epoch: "+str(object_references[2].epoch), constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
+    num_steps_text = font.render("Total steps: "+str(object_references[2].num_steps), constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
+    exploration_chance_text = font.render("exploration_chance: {:.2f}".format(object_references[2].exploration_chance),
+     constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
+
+    list_of_texts.append(agent_position_text)
+    list_of_texts.append(epoch_text)
+    list_of_texts.append(num_steps_text)
+    list_of_texts.append(exploration_chance_text)
+
+    return list_of_texts
+
+# Create matrix texts
+def create_matrix_texts(font, screen, object_references):
     list_of_lines = []
     line = ""
-    for i in range(12):
+    for i in range(len(object_references[1].map_squares) * len(object_references[1].map_squares[0])):
         line = ""
-        for j in range(12):
+        for j in range(len(object_references[1].map_squares) * len(object_references[1].map_squares[0])):
             if(object_references[2].q_matrix[(i, j)] >= 100):
                 line += str(object_references[2].q_matrix[(i, j)])+" "
             elif(object_references[2].q_matrix[(i, j)] >= 10 and object_references[2].q_matrix[(i, j)] < 100):
@@ -98,36 +156,6 @@ def draw_matrix(font, screen, object_references):
 
     state_text = font.render("state", constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
     action_text = font.render("action", constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
-    screen.blit(state_text, (50, below_map_y+(7*constant.FONT_SIZE)+((len(list_of_lines)/2)*0.8*constant.FONT_SIZE)))
-    screen.blit(action_text, (200, below_map_y+(5.8*constant.FONT_SIZE)))
-    for i in range(len(list_of_lines)):
-        screen.blit(list_of_lines[i], (120, below_map_y+(7*constant.FONT_SIZE)+(i*0.9*constant.FONT_SIZE)))
-
-
-def draw_text_on_screen(font, screen, object_references):
-    # object_references[0]: agent
-    # object_references[1]: labyrinth
-    # object_references[2]: q_learning_solver
-    below_map_y = object_references[1].map_squares[len(object_references[1].map_squares)-1][0].y+(2.5 * constant.FONT_SIZE)
-
-    player_position_text = font.render("Agent position: ("+str(object_references[1].agent.map_x)+
-        ", "+str(object_references[1].agent.map_y)+")", constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
-    epoch_text = font.render("Epoch: "+str(object_references[2].epoch), constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
-    num_steps_text = font.render("Total steps: "+str(object_references[2].num_steps), constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
-    exploration_chance_text = font.render("exploration_chance: {:.2f}".format(object_references[2].exploration_chance),
-     constant.SMOOTH_EDGES, constant.COLOR_DICT['black'])
-
-    screen.blit(player_position_text, (70, below_map_y))
-    screen.blit(epoch_text, (70, below_map_y+(1.5 * constant.FONT_SIZE)))
-    screen.blit(num_steps_text, (70, below_map_y+(3 * constant.FONT_SIZE)))
-    screen.blit(exploration_chance_text, (70, below_map_y+(4.5 * constant.FONT_SIZE)))
-
-    for i in range(len(object_references[1].map_squares)):
-        for j in range(len(object_references[1].map_squares[i])):
-            test_text = font.render(str(object_references[1].map_squares[i][j].id), constant.SMOOTH_EDGES,
-                constant.COLOR_DICT['black'])
-            screen.blit(test_text, (object_references[1].map_squares[i][j].x, object_references[1].map_squares[i][j].y))
-
-    draw_matrix(font, screen, object_references)
+    return list_of_lines, state_text, action_text
 
 if __name__ == "__main__": main()
