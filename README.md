@@ -6,7 +6,7 @@ Q-learning is a model-free reinforcement learning algorithm. Q-learning is also 
 
 As of reinforcement learning, q-learning involves an agent, a set of states and set of actions. In my application: 
 
-* The agent is an entity that wants to reach a target/goal position.
+* The agent is an entity (a yellow square) that wants to reach a target/goal position (a pink zone).
 * A state would be the current position of the agent.
 * A action would be the agent movement to an adjacent position.
 
