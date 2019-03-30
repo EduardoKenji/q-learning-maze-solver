@@ -1,7 +1,9 @@
 # Game properties
+WINDOW_TITLE = 'Q-learning labyrinth solver'
 WIDTH = 720
 HEIGHT = 720
 FONT_SIZE = 20
+FONT_NAME = 'monospace'
 SMOOTH_EDGES = 1
 GAME_STEP_DELAY = 70
 GAME_STEP_EVENT_ID = 25

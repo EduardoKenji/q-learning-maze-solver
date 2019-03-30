@@ -7,54 +7,14 @@ from agent import Agent
 # Main function, the first function called in the program
 def main():
 
-    # Agent configuration and creation
-    agent_config_dict = {
-    'map_x': constant.AGENT_MAP_X,
-    'map_y': constant.AGENT_MAP_Y,
-    'direction': constant.AGENT_DEFAULT_DIRECTION
-    }
-    agent = Agent(agent_config_dict)
+    agent = create_agent()
+    labyrinth = create_labyrinth(agent)
+    q_learning_solver = create_q_learning_solver(labyrinth)
+    screen = create_game_window()
+    monospace_font, fps_clock, game_step_timed_event = create_window_objects()
 
-    # Labyrinth map creation
-    file_address = "maps/example_map.txt"
-    map_file = open(file_address, "r")
-    labyrinth = Labyrinth(map_file, agent)
-
-    # Setting up the q-learning R and Q matrixes
-    q_learning_config_dict = {
-    'labyrinth': labyrinth,
-    'learning_rate': constant.STD_LEARNING_RATE,
-    'exploration_chance': constant.STD_EXPLORATION_CHANCE
-    }
-    q_learning_solver = QLearning(q_learning_config_dict)
-
-    # Screen dimensions
-    screen_dimensions = constant.WIDTH, constant.HEIGHT
-
-    # Initializing pygame and font
-    pygame.init()
-    pygame.font.init()
-
-    # Set game window title
-    pygame.display.set_caption('Q-learning labyrinth solver')
-
-    # Screen creation
-    screen = pygame.display.set_mode(screen_dimensions)
-
-    # Font creation
-    monospace_font = pygame.font.SysFont("monospace", constant.FONT_SIZE)
-
-    # Timed event
-    game_step_timed_event = constant.GAME_STEP_EVENT_ID
-    pygame.time.set_timer(game_step_timed_event, constant.GAME_STEP_DELAY)
-
-    # Defined FPS and FPS clock creation
-    fps_clock = pygame.time.Clock()
-
-    # Randomize agent position
+    # Randomize agent initial position
     q_learning_solver.randomize_agent_position()
-
-    #q_learning_solver.decide_next_move()
 
     # Game loop
     running = True
@@ -62,7 +22,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 running = False      
-            # Update the game for each game step (currently 130 milliseconds)
+            # Update the game for each game step (currently each constant.GAME_STEP_DELAY)
             if event.type == game_step_timed_event:
 
                 q_learning_solver.decide_next_move()
@@ -78,6 +38,63 @@ def main():
         fps_clock.tick(constant.FPS_TARGET)
         # Update and possibly repaint window
         pygame.display.update()
+
+def create_window_objects():
+    # Font creation
+    monospace_font = pygame.font.SysFont(constant.FONT_NAME, constant.FONT_SIZE)
+
+    # Timed event
+    game_step_timed_event = constant.GAME_STEP_EVENT_ID
+    pygame.time.set_timer(game_step_timed_event, constant.GAME_STEP_DELAY)
+
+    # Defined FPS and FPS clock creation
+    fps_clock = pygame.time.Clock()
+
+    return monospace_font, fps_clock, game_step_timed_event
+
+def create_game_window():
+
+    # Initializing pygame and font
+    pygame.init()
+    pygame.font.init()
+
+    # Set game window title
+    pygame.display.set_caption(constant.WINDOW_TITLE)
+
+    # Screen dimensions
+    screen_dimensions = constant.WIDTH, constant.HEIGHT
+
+    # Screen creation
+    screen = pygame.display.set_mode(screen_dimensions)
+
+    return screen
+
+def create_q_learning_solver(labyrinth):
+    # Setting up the q-learning R and Q matrixes
+    q_learning_config_dict = {
+    'labyrinth': labyrinth,
+    'learning_rate': constant.STD_LEARNING_RATE,
+    'exploration_chance': constant.STD_EXPLORATION_CHANCE
+    }
+    q_learning_solver = QLearning(q_learning_config_dict)
+    return q_learning_solver
+
+def create_labyrinth(agent):
+     # Labyrinth map creation
+    file_address = "maps/example_map.txt"
+    map_file = open(file_address, "r")
+    labyrinth = Labyrinth(map_file, agent)
+    return labyrinth
+
+def create_agent():
+    # Agent configuration and creation
+    agent_config_dict = {
+    'map_x': constant.AGENT_MAP_X,
+    'map_y': constant.AGENT_MAP_Y,
+    'direction': constant.AGENT_DEFAULT_DIRECTION
+    }
+    agent = Agent(agent_config_dict)
+    return agent
 
 # Draw Q matrix on screen
 def draw_matrix_text(font, screen, object_references):
