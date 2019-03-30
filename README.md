@@ -25,4 +25,4 @@ My application builds a map from a map file, currently in "maps" folder and usin
 
 Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled.
 
-![](q_learning_training.gif)
+![](pictures/q_learning_training.gif)
