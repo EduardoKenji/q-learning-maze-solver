@@ -27,7 +27,7 @@ Q-learning training: As the training goes on, the agent is learning, this learni
 
 <img src="pictures/q_learning_training.gif" width="520">
 
-Untrained agent: As the Q matrix is filled with 0's and the exploration chance is high, most of the agent's decisions will be mostly random as it has no knowledge. (GIF in slower motion below)
+Untrained agent: As the Q matrix is filled with 0's and the exploration chance is high, most of the agent's decisions will be random as it has no knowledge. (GIF in slower motion below)
 
 <img src="pictures/q_learning_untrained.gif" width="250">
 
