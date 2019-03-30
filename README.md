@@ -21,16 +21,16 @@ My application builds a map from a map file, currently in "maps" folder and usin
 * '1': Indicates a path between two squares
 * '2': Indicates goal position
 
-![](pictures/q-learning_map.PNG)
+<img src="pictures/q-learning_map.PNG" width="250">
 
 Q-learning training: As the training goes on, the agent is learning, this learning is represented by the Q matrix being filled. (GIF below)
 
-![](pictures/q_learning_training.gif)
+<img src="pictures/q_learning_training.gif" width="520">
 
 Untrained agent: As the Q matrix is filled with 0's and the exploration chance is high, most of the agent's decisions will be mostly random as it has no knowledge. (GIF in slower motion below)
 
-![](pictures/q_learning_untrained.gif =250x250)
+<img src="pictures/q_learning_untrained.gif" width="250">
 
 Trained agent: As the Q matrix is complete and the exploration chance is very low or simply 0%, the agent will pratically always know how to reach the goal/target map position. (GIF in slower motion below)
 
-![](pictures/q_learning_trained.gif =250x250)
+<img src="pictures/q_learning_trained.gif" width="250">
